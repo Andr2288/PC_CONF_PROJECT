@@ -196,10 +196,16 @@ export default function Home() {
             {catalog.items.map((p) => (
               <li
                 key={p.id}
-                className="flex flex-col rounded-lg border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow transition-shadow"
+                className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow"
               >
-                <div className="aspect-[4/3] bg-gray-100">
-                  <img src={p.image_url} alt="" className="h-full w-full object-cover" loading="lazy" />
+                <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-gray-100">
+                  <img
+                    src={p.image_url}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
                 <div className="p-3 flex flex-col flex-1">
                   <p className="text-xs text-brand-orange font-medium mb-1">{p.category_name}</p>
