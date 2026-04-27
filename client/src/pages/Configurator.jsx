@@ -11,6 +11,7 @@ import {
   tryCopyCurrentToSlot,
 } from "../lib/configurator";
 import { checkCompatibility, compareBuilds } from "../lib/configuratorAnalysis";
+import { partCategoryLabel } from "../lib/partCategoryLabel.js";
 
 function money(n) {
   return new Intl.NumberFormat("uk-UA", { style: "currency", currency: "UAH", maximumFractionDigits: 0 }).format(n);
@@ -28,7 +29,6 @@ function panelClass(level) {
 
 export default function Configurator() {
   const { user } = useAuth();
-  /** Лічильник, щоб після кожної зміни localStorage зробився повторний рендер і все перечиталося */
   const [, setRenderTick] = useState(0);
   const refresh = () => setRenderTick((n) => n + 1);
 
@@ -46,14 +46,13 @@ export default function Configurator() {
     <div>
       <h1 className="text-2xl font-semibold text-brand-ink mb-2">Конфігуратор ПК</h1>
       <p className="text-sm text-brand-muted mb-6 max-w-2xl">
-        Список зберігається лише в цьому браузері, окремо для гостя і для власного акаунта. Ми намагаємось підказати, чи
-        пасують у списку процесор, плата й пам’ять. Щоб порівняти два плани — збережіть у A один набір, у B інший
-        (спочатку додайте/приберіть товари, потім кнопкою скопіювати).
+        Збірка зберігається в браузері (окремо для гостя та для акаунта). Підказки щодо поєднання процесора, плати та
+        пам’яті. Щоб порівняти два варіанти — збережіть чернетку в A, змініть набір у каталозі, потім у B.
       </p>
 
       {items.length === 0 ? (
         <p className="text-brand-muted mb-4">
-          Список поточної чернетки порожній. Додайте комплектуючі з{" "}
+          Порожньо. Додайте деталі з{" "}
           <Link to="/" className="text-brand-orange font-medium hover:underline">
             каталогу
           </Link>
@@ -68,7 +67,7 @@ export default function Configurator() {
             >
               <div>
                 <p className="font-medium text-brand-ink">{row.name}</p>
-                <p className="text-xs text-brand-muted">{row.category_slug}</p>
+                <p className="text-xs text-brand-muted">{partCategoryLabel(row.category_slug)}</p>
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-sm font-semibold text-brand-ink">{money(row.price)}</span>
@@ -88,12 +87,12 @@ export default function Configurator() {
         </ul>
       )}
 
-      <p className="text-sm mb-4">
-        Орієнтовна сума: <span className="font-semibold">{money(total)}</span>
+      <p className="text-sm mb-4 text-brand-ink">
+        Всього: <span className="font-semibold tabular-nums">{money(total)}</span>
       </p>
 
       <div className={`rounded-lg border p-4 mb-6 text-sm ${panelClass(compat.level)}`}>
-        <p className="font-medium text-brand-ink mb-2">Перевірка сумісності (поточна чернетка)</p>
+        <p className="font-medium text-brand-ink mb-2">Сумісність</p>
         <ul className="list-disc pl-5 space-y-1 text-brand-ink">
           {compat.lines.map((l, i) => (
             <li key={i}>{l}</li>
@@ -107,7 +106,7 @@ export default function Configurator() {
             type="button"
             onClick={() => {
               if (!tryCopyCurrentToSlot("a", user)) {
-                toast.error("Порівняння потребує різні варіанти. Поточна чернетка вже збігається з B — змініть товари або очистіть B.");
+                toast.error("Варіанти A і B мають відрізнятися. Очистіть B або змініть чернетку.");
                 return;
               }
               refresh();
@@ -121,7 +120,7 @@ export default function Configurator() {
             type="button"
             onClick={() => {
               if (!tryCopyCurrentToSlot("b", user)) {
-                toast.error("Порівняння потребує різні варіанти. Поточна чернетка вже збігається з A — змініть товари або очистіть A.");
+                toast.error("Варіанти A і B мають відрізнятися. Очистіть A або змініть чернетку.");
                 return;
               }
               refresh();
@@ -168,7 +167,7 @@ export default function Configurator() {
                   </p>
                 )}
                 {data.length === 0 ? (
-                  <p className="text-brand-muted">Порожньо. «Поточне → {slot.toUpperCase()}» після додавання в чернетку.</p>
+                  <p className="text-brand-muted">Порожньо. Скопіюйте чернетку кнопкою «Поточне → {slot.toUpperCase()}».</p>
                 ) : (
                   <ul className="text-xs space-y-1 text-brand-ink mb-2 border-t border-gray-200/80 pt-2">
                     {c.lines.map((l, i) => (
@@ -195,11 +194,13 @@ export default function Configurator() {
         </div>
       </section>
 
-      <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-        <h2 className="text-lg font-semibold text-brand-ink mb-2">{comparison.title}</h2>
-        <ul className="text-sm text-brand-ink space-y-2 list-disc pl-5">
+      <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+        <h2 className="text-lg font-semibold text-brand-ink mb-3">{comparison.title}</h2>
+        <ul className="text-sm text-brand-ink space-y-2 list-disc pl-5 marker:text-brand-orange">
           {comparison.body.map((line, i) => (
-            <li key={i}>{line}</li>
+            <li key={i} className="leading-relaxed pl-0.5">
+              {line}
+            </li>
           ))}
         </ul>
       </section>

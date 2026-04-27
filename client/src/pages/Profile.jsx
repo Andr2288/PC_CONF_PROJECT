@@ -39,7 +39,7 @@ export default function Profile() {
   return (
     <div>
       <h1 className="text-2xl font-semibold text-brand-ink mb-2">Профіль</h1>
-      <p className="text-sm text-brand-muted mb-6">Перегляд та зміна контактних даних. Email змінюється лише через підтримку (навчальний MVP).</p>
+      <p className="text-sm text-brand-muted mb-6">Редагування імені та телефону. Зміна email — за запитом до адміністрації.</p>
 
       <form onSubmit={onSubmit} className="max-w-md space-y-4 rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
         <div>

@@ -86,7 +86,7 @@ export default function Checkout() {
 
       <form onSubmit={onSubmit} className="max-w-xl space-y-4 rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
         <div>
-          <label className="block text-xs font-medium text-brand-muted mb-1">Адреса доставки * (мін. 10 символів)</label>
+          <label className="block text-xs font-medium text-brand-muted mb-1">Адреса доставки *</label>
           <textarea
             required
             minLength={10}
@@ -99,7 +99,7 @@ export default function Checkout() {
           />
           {delivery_address.trim().length >= 10 && !deliveryAddressIsPlausible(delivery_address) && (
             <p className="text-xs text-red-600 mt-1">
-              Потрібні літери або цифри (наприклад, місто, номер відділення) — не лише символи на кшталт «/».
+              Невірний формат вводу. Потрібні літери або цифри (наприклад, місто, номер відділення).
             </p>
           )}
         </div>

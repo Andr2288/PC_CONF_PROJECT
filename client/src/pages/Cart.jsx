@@ -76,9 +76,7 @@ export default function Cart() {
   return (
     <div>
       <h1 className="text-2xl font-semibold text-brand-ink mb-2">Кошик</h1>
-      <p className="text-sm text-brand-muted mb-6">
-        Кількість можна змінювати тут. У каталозі показується залишок на складі (без урахування вашого кошика).
-      </p>
+      <p className="text-sm text-brand-muted mb-6">Зміна кількості та підсумок. У картці товару — залишок на складі.</p>
 
       {items.length === 0 ? (
         <p className="text-brand-muted mb-4">

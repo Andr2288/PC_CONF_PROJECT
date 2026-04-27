@@ -1,7 +1,4 @@
-/**
- * Меню для роботи з БД (ТЗ): перевірка, ініціалізація + мок-дані, видалення БД.
- * Запуск з папки server: npm run setup
- */
+/* setup: npm run setup (з папки server) */
 require("dotenv").config();
 const fs = require("fs");
 const path = require("path");

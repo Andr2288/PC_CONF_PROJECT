@@ -1,5 +1,3 @@
-/** localStorage: чернетка конфігуратора — окремо для гостя і для кожного `user.id`. */
-
 const LEGACY = {
   items: "pcshop_configurator_items",
   a: "pcshop_configurator_slot_a",
@@ -12,7 +10,6 @@ const PREFIX = {
   b: "pcshop_configurator_slot_b_",
 };
 
-/** @param {null|{ id?: string|number|undefined }|undefined} user */
 function suffixFromUser(user) {
   if (user == null) return "guest";
   const id = user.id;
@@ -28,7 +25,6 @@ function keySlot(slot, suf) {
   return slot === "b" ? `${PREFIX.b}${suf}` : `${PREFIX.a}${suf}`;
 }
 
-/** `!==` після JSON часто ламає видалення: number vs string. */
 function sameId(a, b) {
   return a != null && b != null && String(a) === String(b);
 }
@@ -43,8 +39,7 @@ function readJson(key, fallback) {
   try {
     const raw = localStorage.getItem(key);
     if (!raw) return fallback;
-    const v = JSON.parse(raw);
-    return v;
+    return JSON.parse(raw);
   } catch {
     return fallback;
   }
@@ -61,7 +56,7 @@ function readItemsWithMigrate(suf) {
         localStorage.setItem(k, JSON.stringify(legacy));
         localStorage.removeItem(LEGACY.items);
       } catch {
-        /* ignore */
+        // ignore
       }
       return legacy;
     }
@@ -81,7 +76,7 @@ function readSlotWithMigrate(slot, suf) {
         localStorage.setItem(k, JSON.stringify(legacy));
         localStorage.removeItem(legKey);
       } catch {
-        /* ignore */
+        // ignore
       }
       return legacy;
     }
@@ -89,12 +84,10 @@ function readSlotWithMigrate(slot, suf) {
   return Array.isArray(arr) ? arr : [];
 }
 
-/** @param {null|{ id?: string|number }} [user] */
 export function getConfiguratorItems(user) {
   return readItemsWithMigrate(suffixFromUser(user));
 }
 
-/** @param {null|{ id?: string|number }} [user] */
 export function setConfiguratorItems(items, user) {
   localStorage.setItem(keyItems(suffixFromUser(user)), JSON.stringify(items));
 }
@@ -111,7 +104,6 @@ function normalizeItem(item) {
   return o;
 }
 
-/** @param {null|{ id?: string|number }} [user] */
 export function addToConfiguratorDraft(item, user) {
   const n = normalizeItem(item);
   const list = getConfiguratorItems(user).filter((x) => !sameId(x.id, n.id));
@@ -119,7 +111,6 @@ export function addToConfiguratorDraft(item, user) {
   setConfiguratorItems(list, user);
 }
 
-/** @param {null|{ id?: string|number }} [user] */
 export function removeConfiguratorItem(id, user) {
   setConfiguratorItems(
     getConfiguratorItems(user).filter((x) => !sameId(x.id, id)),
@@ -127,26 +118,22 @@ export function removeConfiguratorItem(id, user) {
   );
 }
 
-/** @param {null|{ id?: string|number }} [user] */
 export function clearConfigurator(user) {
   try {
     localStorage.removeItem(keyItems(suffixFromUser(user)));
   } catch {
-    /* ignore */
+    // ignore
   }
 }
 
-/** @param {"a"|"b"} slot @param {null|{ id?: string|number }} [user] */
 export function getSlotItems(slot, user) {
   return readSlotWithMigrate(slot, suffixFromUser(user));
 }
 
-/** @param {"a"|"b"} slot @param {null|{ id?: string|number }} [user] */
 export function setSlotItems(slot, items, user) {
   localStorage.setItem(keySlot(slot, suffixFromUser(user)), JSON.stringify(items));
 }
 
-/** Порожні масиви вважаються рівними. Порівняння: id, категорія, ціна, name, specs (нормалізовано). */
 export function isSameBuild(itemsA, itemsB) {
   if (!Array.isArray(itemsA) || !Array.isArray(itemsB)) return false;
   if (itemsA.length === 0 && itemsB.length === 0) return true;
@@ -164,10 +151,6 @@ export function isSameBuild(itemsA, itemsB) {
   return JSON.stringify(snap(itemsA)) === JSON.stringify(snap(itemsB));
 }
 
-/**
- * Копіювати в слот, лише якщо чернетка не дублює **іншу** збережену збірку (A vs B).
- * @returns {boolean} true якщо збережено, false — якщо сховище не змінювали
- */
 export function tryCopyCurrentToSlot(slot, user) {
   const other = slot === "b" ? "a" : "b";
   const current = getConfiguratorItems(user);
@@ -179,11 +162,10 @@ export function tryCopyCurrentToSlot(slot, user) {
   return true;
 }
 
-/** @param {"a"|"b"} slot @param {null|{ id?: string|number }} [user] */
 export function clearSlot(slot, user) {
   try {
     localStorage.removeItem(keySlot(slot, suffixFromUser(user)));
   } catch {
-    /* ignore */
+    // ignore
   }
 }

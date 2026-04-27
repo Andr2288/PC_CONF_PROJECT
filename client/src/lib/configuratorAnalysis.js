@@ -1,4 +1,3 @@
-/** Сумісність і умовні «оцінки» збірок (навчальний MVP, без детальної БД сокетів). */
 import { isSameBuild } from "./configurator.js";
 
 const CAT = {
@@ -14,10 +13,6 @@ function firstByCategory(items, slug) {
   return items.find((x) => x.category_slug === slug) || null;
 }
 
-/**
- * @param {Array<{ category_slug: string, specs?: object }>} items
- * @returns {{ ok: boolean, level: 'ok'|'warn'|'info', lines: string[] }}
- */
 export function checkCompatibility(items) {
   const pos = [];
   const neg = [];
@@ -96,7 +91,6 @@ function metricsFromItems(items) {
   return { vram, ramGb, ramMhz, cpuTdp, hasNvme, total };
 }
 
-/** Умовні бали (для порівняння, не бенчмарки). */
 function scores(m) {
   return {
     games: m.vram * 120 + m.ramMhz * 0.15 + m.cpuTdp * 0.4,
@@ -105,9 +99,6 @@ function scores(m) {
   };
 }
 
-/**
- * @returns {{ title: string, body: string[] }}
- */
 export function compareBuilds(itemsA, itemsB) {
   const empty = !itemsA.length && !itemsB.length;
   if (empty) {

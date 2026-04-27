@@ -18,7 +18,6 @@ export default function Home() {
   const search = params.get("search") || "";
   const page = Math.max(1, parseInt(params.get("page"), 10) || 1);
 
-  const [health, setHealth] = useState(null);
   const [categories, setCategories] = useState([]);
   const [catalog, setCatalog] = useState({ items: [], total: 0, pages: 1, page: 1, limit: 12 });
   const [loading, setLoading] = useState(true);
@@ -31,13 +30,6 @@ export default function Home() {
   useEffect(() => {
     setSearchInput(search);
   }, [search]);
-
-  useEffect(() => {
-    fetch("/api/health")
-      .then((r) => r.json())
-      .then(setHealth)
-      .catch(() => setHealth({ ok: false, db: "down" }));
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -127,7 +119,7 @@ export default function Home() {
     (item) => {
       addToConfiguratorDraft(item, user);
       setCfgBump((x) => x + 1);
-      toast.success("Додано в чернетку конфігуратора");
+      toast.success("Додано в конфігуратор");
     },
     [user]
   );
@@ -138,7 +130,7 @@ export default function Home() {
         <div>
           <h1 className="text-2xl font-semibold text-brand-ink mb-1">Каталог</h1>
           <p className="text-sm text-brand-muted">
-            Фільтр за категорією, пошук, пагінація. «На складі» — залишок на складі; кількість у кошику змінюється на сторінці{" "}
+            Категорія, пошук, пагінація. Кількість у кошику — на сторінці{" "}
             <Link to="/cart" className="text-brand-orange font-medium hover:underline">
               Кошик
             </Link>
@@ -198,12 +190,6 @@ export default function Home() {
           </button>
         </form>
       </div>
-
-      {health && (
-        <p className="text-xs text-brand-muted mb-4">
-          API: {health.ok ? "ok" : "немає"} · БД: {health.db === "up" ? "ok" : "немає"}
-        </p>
-      )}
 
       {error && <p className="text-sm text-red-600 mb-4">{error}</p>}
       {loading && <p className="text-sm text-brand-muted">Завантаження…</p>}

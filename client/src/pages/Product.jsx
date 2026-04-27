@@ -76,7 +76,7 @@ export default function Product() {
       },
       user
     );
-    toast.success("Додано в чернетку конфігуратора");
+    toast.success("Додано в конфігуратор");
   }, [product, user]);
 
   if (loading) {

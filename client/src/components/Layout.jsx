@@ -103,12 +103,12 @@ export default function Layout() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 py-10 flex-1 w-full">
+      <main className="mx-auto max-w-5xl px-4 sm:px-5 py-8 sm:py-10 flex-1 w-full min-h-[60vh]">
         <Outlet />
       </main>
 
-      <footer className="border-t border-gray-200 bg-white py-4 text-center text-xs text-brand-muted">
-        Навчальний проєкт
+      <footer className="border-t border-gray-200 bg-gray-50/80 py-5 text-center text-xs text-brand-muted">
+        PC Shop
       </footer>
     </div>
   );
