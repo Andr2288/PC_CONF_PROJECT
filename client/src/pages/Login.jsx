@@ -25,9 +25,10 @@ export default function Login() {
   }
 
   return (
-    <div className="max-w-md">
-      <h1 className="text-2xl font-semibold text-brand-ink mb-1">Вхід</h1>
-      <p className="text-sm text-brand-muted mb-6">
+    <div className="flex w-full flex-1 flex-col items-center justify-center">
+      <div className="w-full max-w-md">
+      <h1 className="text-2xl font-semibold text-brand-ink mb-1 text-center sm:text-left">Вхід</h1>
+      <p className="text-sm text-brand-muted mb-6 text-center sm:text-left">
         Немає акаунта?{" "}
         <Link to="/register" className="text-brand-orange font-medium hover:underline">
           Реєстрація
@@ -66,6 +67,7 @@ export default function Login() {
           {busy ? "Вхід…" : "Увійти"}
         </button>
       </form>
+      </div>
     </div>
   );
 }

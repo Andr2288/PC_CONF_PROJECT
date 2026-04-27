@@ -129,13 +129,6 @@ export default function Home() {
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-semibold text-brand-ink mb-1">Каталог</h1>
-          <p className="text-sm text-brand-muted">
-            Категорія, пошук, пагінація. Кількість у кошику — на сторінці{" "}
-            <Link to="/cart" className="text-brand-orange font-medium hover:underline">
-              Кошик
-            </Link>
-            .
-          </p>
         </div>
         {configCount > 0 && (
           <Link

@@ -103,7 +103,7 @@ export default function Layout() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 sm:px-5 py-8 sm:py-10 flex-1 w-full min-h-[60vh]">
+      <main className="mx-auto flex w-full min-h-0 max-w-5xl flex-1 flex-col px-4 py-8 sm:px-5 sm:py-10">
         <Outlet />
       </main>
 

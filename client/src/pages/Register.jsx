@@ -27,9 +27,10 @@ export default function Register() {
   }
 
   return (
-    <div className="max-w-md">
-      <h1 className="text-2xl font-semibold text-brand-ink mb-1">Реєстрація</h1>
-      <p className="text-sm text-brand-muted mb-6">
+    <div className="flex w-full flex-1 flex-col items-center justify-center">
+      <div className="w-full max-w-md">
+      <h1 className="text-2xl font-semibold text-brand-ink mb-1 text-center sm:text-left">Реєстрація</h1>
+      <p className="text-sm text-brand-muted mb-6 text-center sm:text-left">
         Вже є акаунт?{" "}
         <Link to="/login" className="text-brand-orange font-medium hover:underline">
           Вхід
@@ -87,6 +88,7 @@ export default function Register() {
           {busy ? "Створення…" : "Зареєструватися"}
         </button>
       </form>
+      </div>
     </div>
   );
 }
