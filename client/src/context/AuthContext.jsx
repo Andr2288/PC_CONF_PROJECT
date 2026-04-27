@@ -39,9 +39,15 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
+  const updateProfile = useCallback(async (body) => {
+    const data = await api("/api/auth/profile", { method: "PATCH", body: JSON.stringify(body) });
+    setUser(data.user);
+    return data.user;
+  }, []);
+
   const value = useMemo(
-    () => ({ user, loading, login, register, logout, refresh }),
-    [user, loading, login, register, logout, refresh]
+    () => ({ user, loading, login, register, logout, refresh, updateProfile }),
+    [user, loading, login, register, logout, refresh, updateProfile]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

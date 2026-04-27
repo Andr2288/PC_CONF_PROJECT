@@ -8,6 +8,7 @@ import Login from "./pages/Login.jsx";
 import OrderDetail from "./pages/OrderDetail.jsx";
 import Orders from "./pages/Orders.jsx";
 import Product from "./pages/Product.jsx";
+import Profile from "./pages/Profile.jsx";
 import Register from "./pages/Register.jsx";
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/orders/:id" element={<OrderDetail />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<Navigate to="/" replace />} />

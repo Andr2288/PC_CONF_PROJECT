@@ -112,4 +112,40 @@ router.get("/me", requireAuth, async (req, res) => {
   });
 });
 
+router.patch("/profile", requireAuth, async (req, res) => {
+  const full_name = String(req.body?.full_name ?? "").trim();
+  const phone = String(req.body?.phone ?? "").trim();
+
+  if (full_name.length < 2) {
+    return res.status(400).json({ error: "Ім’я мінімум 2 символи" });
+  }
+  if (full_name.length > 120) {
+    return res.status(400).json({ error: "Ім’я занадто довге" });
+  }
+  if (phone.length > 40) {
+    return res.status(400).json({ error: "Телефон занадто довгий" });
+  }
+
+  const pool = getPool();
+  await pool.query(
+    `UPDATE users SET full_name = :full_name, phone = :phone WHERE id = :id`,
+    { full_name, phone, id: req.userId }
+  );
+
+  const [rows] = await pool.query(
+    `SELECT id, email, full_name, phone, role FROM users WHERE id = :id LIMIT 1`,
+    { id: req.userId }
+  );
+  const user = rows[0];
+  res.json({
+    user: {
+      id: user.id,
+      email: user.email,
+      full_name: user.full_name,
+      phone: user.phone,
+      role: user.role,
+    },
+  });
+});
+
 module.exports = router;

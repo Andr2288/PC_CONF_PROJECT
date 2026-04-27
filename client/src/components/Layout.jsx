@@ -59,6 +59,9 @@ export default function Layout() {
                   <Link to="/orders" className="hover:underline">
                     Замовлення
                   </Link>
+                  <Link to="/profile" className="hover:underline">
+                    Профіль
+                  </Link>
                 </>
               )}
             </nav>
