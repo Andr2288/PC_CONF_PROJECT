@@ -6,6 +6,7 @@ const { ping } = require("./db");
 const authRoutes = require("./routes/auth");
 const catalogRoutes = require("./routes/catalog");
 const cartRoutes = require("./routes/cart");
+const ordersRoutes = require("./routes/orders");
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/catalog", catalogRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/orders", ordersRoutes);
 
 app.get("/api/health", async (_req, res) => {
   try {

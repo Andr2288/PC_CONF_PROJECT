@@ -52,9 +52,14 @@ export default function Layout() {
                 Конфігуратор
               </Link>
               {user && (
-                <Link to="/cart" className="hover:underline">
-                  Кошик{cartCount != null && cartCount > 0 ? ` (${cartCount})` : ""}
-                </Link>
+                <>
+                  <Link to="/cart" className="hover:underline">
+                    Кошик{cartCount != null && cartCount > 0 ? ` (${cartCount})` : ""}
+                  </Link>
+                  <Link to="/orders" className="hover:underline">
+                    Замовлення
+                  </Link>
+                </>
               )}
             </nav>
           </div>

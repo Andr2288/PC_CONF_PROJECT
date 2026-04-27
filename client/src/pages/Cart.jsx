@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { api } from "../api";
 import { CART_UPDATE_EVENT } from "../lib/cartEvents.js";
@@ -9,6 +9,7 @@ function money(n) {
 }
 
 export default function Cart() {
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
@@ -154,6 +155,15 @@ export default function Cart() {
             Разом: <span className="font-semibold">{money(data?.totalPrice || 0)}</span>
             <span className="text-brand-muted text-sm ml-2">({data?.totalQty} шт.)</span>
           </p>
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={() => navigate("/checkout")}
+              className="rounded bg-brand-orange px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-orange-hover"
+            >
+              Оформити замовлення
+            </button>
+          </div>
         </>
       )}
     </div>
