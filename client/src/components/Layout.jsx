@@ -1,16 +1,64 @@
-import { Link, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import { api } from "../api";
 import { useAuth } from "../context/AuthContext";
+
+const CART_UPDATE = "pcshop-cart-update";
 
 export default function Layout() {
   const { user, loading, logout } = useAuth();
+  const location = useLocation();
+  const [cartCount, setCartCount] = useState(null);
+
+  useEffect(() => {
+    if (!user) {
+      setCartCount(null);
+      return undefined;
+    }
+
+    let cancelled = false;
+    async function loadCount() {
+      try {
+        const d = await api("/api/cart");
+        if (!cancelled) setCartCount(d.items?.length ?? 0);
+      } catch {
+        if (!cancelled) setCartCount(0);
+      }
+    }
+
+    loadCount();
+    const onUpdate = () => {
+      loadCount();
+    };
+    window.addEventListener(CART_UPDATE, onUpdate);
+    return () => {
+      cancelled = true;
+      window.removeEventListener(CART_UPDATE, onUpdate);
+    };
+  }, [user, location.pathname]);
 
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-brand-orange text-white shadow">
         <div className="mx-auto max-w-5xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-          <Link to="/" className="font-semibold text-lg hover:opacity-90">
-            PC Shop
-          </Link>
+          <div className="flex items-center gap-5">
+            <Link to="/" className="font-semibold text-lg hover:opacity-90">
+              PC Shop
+            </Link>
+            <nav className="flex flex-wrap items-center gap-3 text-sm opacity-95">
+              <Link to="/" className="hover:underline">
+                Каталог
+              </Link>
+              <Link to="/configurator" className="hover:underline">
+                Конфігуратор
+              </Link>
+              {user && (
+                <Link to="/cart" className="hover:underline">
+                  Кошик{cartCount != null && cartCount > 0 ? ` (${cartCount})` : ""}
+                </Link>
+              )}
+            </nav>
+          </div>
           <nav className="flex items-center gap-3 text-sm">
             {!loading && user && (
               <>

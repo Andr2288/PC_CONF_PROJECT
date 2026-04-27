@@ -4,6 +4,8 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { ping } = require("./db");
 const authRoutes = require("./routes/auth");
+const catalogRoutes = require("./routes/catalog");
+const cartRoutes = require("./routes/cart");
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
@@ -19,6 +21,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/catalog", catalogRoutes);
+app.use("/api/cart", cartRoutes);
 
 app.get("/api/health", async (_req, res) => {
   try {
