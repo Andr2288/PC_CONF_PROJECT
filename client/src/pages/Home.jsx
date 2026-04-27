@@ -26,7 +26,7 @@ export default function Home() {
   const [searchInput, setSearchInput] = useState(search);
   const [cfgBump, setCfgBump] = useState(0);
 
-  const configCount = useMemo(() => getConfiguratorItems().length, [cfgBump]);
+  const configCount = useMemo(() => getConfiguratorItems(user).length, [cfgBump, user?.id]);
 
   useEffect(() => {
     setSearchInput(search);
@@ -123,11 +123,14 @@ export default function Home() {
     [params, setParams]
   );
 
-  const addToCfg = useCallback((item) => {
-    addToConfiguratorDraft(item);
-    setCfgBump((x) => x + 1);
-    toast.success("Додано в чернетку конфігуратора");
-  }, []);
+  const addToCfg = useCallback(
+    (item) => {
+      addToConfiguratorDraft(item, user);
+      setCfgBump((x) => x + 1);
+      toast.success("Додано в чернетку конфігуратора");
+    },
+    [user]
+  );
 
   return (
     <>
@@ -266,6 +269,7 @@ export default function Home() {
                           name: p.name,
                           price: p.price,
                           category_slug: p.category_slug,
+                          specs: p.specs,
                         })
                       }
                       className="flex-1 min-w-[120px] rounded border border-brand-green py-2 text-xs font-medium text-brand-green hover:bg-green-50"

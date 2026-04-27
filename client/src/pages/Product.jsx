@@ -66,14 +66,18 @@ export default function Product() {
 
   const addToCfg = useCallback(() => {
     if (!product) return;
-    addToConfiguratorDraft({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      category_slug: product.category_slug,
-    });
+    addToConfiguratorDraft(
+      {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        category_slug: product.category_slug,
+        specs: product.specs,
+      },
+      user
+    );
     toast.success("Додано в чернетку конфігуратора");
-  }, [product]);
+  }, [product, user]);
 
   if (loading) {
     return <p className="text-sm text-brand-muted">Завантаження…</p>;
