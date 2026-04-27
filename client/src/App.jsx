@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
+import AdminProducts from "./pages/AdminProducts.jsx";
 import Cart from "./pages/Cart.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Configurator from "./pages/Configurator.jsx";
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/orders" element={<Orders />} />
         <Route path="/orders/:id" element={<OrderDetail />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/admin/products" element={<AdminProducts />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<Navigate to="/" replace />} />

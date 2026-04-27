@@ -34,7 +34,7 @@ router.get("/products", async (req, res) => {
   const limit = Math.min(50, Math.max(1, parseInt(req.query.limit, 10) || 12));
   const offset = (page - 1) * limit;
 
-  let where = "1=1";
+  let where = "p.is_active = 1";
   const params = {};
   if (categorySlug) {
     where += " AND c.slug = :categorySlug";
@@ -100,7 +100,7 @@ router.get("/products/:slug", async (req, res) => {
               c.id AS category_id, c.slug AS category_slug, c.name AS category_name
        FROM products p
        INNER JOIN categories c ON c.id = p.category_id
-       WHERE p.slug = :slug
+       WHERE p.slug = :slug AND p.is_active = 1
        LIMIT 1`,
       { slug }
     );

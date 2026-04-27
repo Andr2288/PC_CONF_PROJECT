@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS products (
   stock INT NOT NULL DEFAULT 0,
   image_url VARCHAR(512) NOT NULL DEFAULT '',
   specs JSON NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uq_products_slug (slug),

@@ -10,7 +10,7 @@ router.get("/", requireAuth, async (req, res) => {
     `SELECT ci.product_id, ci.quantity,
             p.name, p.slug, p.price, p.stock, p.image_url
      FROM cart_items ci
-     INNER JOIN products p ON p.id = ci.product_id
+     INNER JOIN products p ON p.id = ci.product_id AND p.is_active = 1
      WHERE ci.user_id = :uid
      ORDER BY p.name ASC`,
     { uid: req.userId }
@@ -50,7 +50,7 @@ router.post("/items", requireAuth, async (req, res) => {
 
   const pool = getPool();
   const [products] = await pool.query(
-    `SELECT id, stock FROM products WHERE id = :id LIMIT 1`,
+    `SELECT id, stock FROM products WHERE id = :id AND is_active = 1 LIMIT 1`,
     { id: productId }
   );
   const product = products[0];
@@ -100,7 +100,9 @@ router.patch("/items/:productId", requireAuth, async (req, res) => {
   }
 
   const pool = getPool();
-  const [products] = await pool.query(`SELECT stock FROM products WHERE id = :id LIMIT 1`, { id: productId });
+  const [products] = await pool.query(`SELECT stock FROM products WHERE id = :id AND is_active = 1 LIMIT 1`, {
+    id: productId,
+  });
   const product = products[0];
   if (!product) {
     return res.status(404).json({ error: "Товар не знайдено" });

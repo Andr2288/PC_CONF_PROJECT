@@ -62,6 +62,11 @@ export default function Layout() {
                   <Link to="/profile" className="hover:underline">
                     Профіль
                   </Link>
+                  {user.role === "admin" && (
+                    <Link to="/admin/products" className="hover:underline font-medium">
+                      Адмін
+                    </Link>
+                  )}
                 </>
               )}
             </nav>

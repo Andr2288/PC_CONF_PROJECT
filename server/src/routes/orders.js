@@ -124,7 +124,7 @@ router.post("/", requireAuth, async (req, res) => {
     const [lines] = await conn.query(
       `SELECT ci.product_id, ci.quantity, p.price, p.stock
        FROM cart_items ci
-       INNER JOIN products p ON p.id = ci.product_id
+       INNER JOIN products p ON p.id = ci.product_id AND p.is_active = 1
        WHERE ci.user_id = :uid`,
       { uid: req.userId }
     );
