@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { api } from "../api";
 import { useAuth } from "../context/AuthContext";
-
-const CART_UPDATE = "pcshop-cart-update";
+import { CART_UPDATE_EVENT } from "../lib/cartEvents.js";
 
 export default function Layout() {
   const { user, loading, logout } = useAuth();
@@ -30,10 +29,10 @@ export default function Layout() {
     const onUpdate = () => {
       loadCount();
     };
-    window.addEventListener(CART_UPDATE, onUpdate);
+    window.addEventListener(CART_UPDATE_EVENT, onUpdate);
     return () => {
       cancelled = true;
-      window.removeEventListener(CART_UPDATE, onUpdate);
+      window.removeEventListener(CART_UPDATE_EVENT, onUpdate);
     };
   }, [user, location.pathname]);
 

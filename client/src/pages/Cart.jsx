@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { api } from "../api";
+import { CART_UPDATE_EVENT } from "../lib/cartEvents.js";
 
 function money(n) {
   return new Intl.NumberFormat("uk-UA", { style: "currency", currency: "UAH", maximumFractionDigits: 0 }).format(n);
@@ -26,7 +27,7 @@ export default function Cart() {
   }, []);
 
   useEffect(() => {
-    load().then(() => window.dispatchEvent(new Event("pcshop-cart-update")));
+    load().then(() => window.dispatchEvent(new Event(CART_UPDATE_EVENT)));
   }, [load]);
 
   const setQty = useCallback(
@@ -38,7 +39,7 @@ export default function Cart() {
           body: JSON.stringify({ quantity }),
         });
         await load();
-        window.dispatchEvent(new Event("pcshop-cart-update"));
+        window.dispatchEvent(new Event(CART_UPDATE_EVENT));
       } catch (e) {
         toast.error(e.message || "Помилка");
       } finally {
@@ -54,7 +55,7 @@ export default function Cart() {
       try {
         await api(`/api/cart/items/${productId}`, { method: "DELETE" });
         await load();
-        window.dispatchEvent(new Event("pcshop-cart-update"));
+        window.dispatchEvent(new Event(CART_UPDATE_EVENT));
         toast.success("Прибрано з кошика");
       } catch (e) {
         toast.error(e.message || "Помилка");
@@ -103,7 +104,12 @@ export default function Cart() {
                 {items.map((row) => (
                   <tr key={row.product_id}>
                     <td className="px-3 py-3">
-                      <p className="font-medium text-brand-ink">{row.name}</p>
+                      <Link
+                        to={`/product/${row.slug}`}
+                        className="font-medium text-brand-ink hover:text-brand-orange hover:underline"
+                      >
+                        {row.name}
+                      </Link>
                       <p className="text-xs text-brand-muted sm:hidden">На складі: {row.stock}</p>
                     </td>
                     <td className="px-3 py-3 hidden sm:table-cell text-brand-muted">{row.stock}</td>

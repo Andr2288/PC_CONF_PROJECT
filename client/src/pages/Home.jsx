@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { Link, useSearchParams } from "react-router-dom";
 import { api } from "../api";
 import { useAuth } from "../context/AuthContext";
+import { useInCart } from "../hooks/useInCart.js";
 import { addToConfiguratorDraft, getConfiguratorItems } from "../lib/configurator";
 
 function money(n) {
@@ -11,6 +12,7 @@ function money(n) {
 
 export default function Home() {
   const { user } = useAuth();
+  const { inCartIds, addingToCartId, addToCart } = useInCart(user);
   const [params, setParams] = useSearchParams();
   const category = params.get("category") || "";
   const search = params.get("search") || "";
@@ -23,35 +25,8 @@ export default function Home() {
   const [error, setError] = useState("");
   const [searchInput, setSearchInput] = useState(search);
   const [cfgBump, setCfgBump] = useState(0);
-  const [addingToCartId, setAddingToCartId] = useState(null);
-  const [inCartIds, setInCartIds] = useState(() => new Set());
 
   const configCount = useMemo(() => getConfiguratorItems().length, [cfgBump]);
-
-  useEffect(() => {
-    if (!user) {
-      setInCartIds(new Set());
-      return;
-    }
-    let cancelled = false;
-    async function loadCartIds() {
-      try {
-        const d = await api("/api/cart");
-        if (!cancelled) {
-          setInCartIds(new Set((d.items || []).map((i) => i.product_id)));
-        }
-      } catch {
-        if (!cancelled) setInCartIds(new Set());
-      }
-    }
-    loadCartIds();
-    const onUpdate = () => loadCartIds();
-    window.addEventListener("pcshop-cart-update", onUpdate);
-    return () => {
-      cancelled = true;
-      window.removeEventListener("pcshop-cart-update", onUpdate);
-    };
-  }, [user]);
 
   useEffect(() => {
     setSearchInput(search);
@@ -147,27 +122,6 @@ export default function Home() {
     },
     [params, setParams]
   );
-
-  const addToCart = useCallback(async (productId) => {
-    setAddingToCartId(productId);
-    try {
-      const data = await api("/api/cart/items", {
-        method: "POST",
-        body: JSON.stringify({ product_id: productId, quantity: 1, from_catalog: true }),
-      });
-      if (data.alreadyInCart) {
-        toast("Цей товар уже у кошику — змініть кількість у кошику", { icon: "ℹ️" });
-      } else {
-        toast.success("Товар додано в кошик");
-      }
-      setInCartIds((prev) => new Set(prev).add(productId));
-      window.dispatchEvent(new Event("pcshop-cart-update"));
-    } catch (e) {
-      toast.error(e.message || "Не вдалося додати в кошик");
-    } finally {
-      setAddingToCartId(null);
-    }
-  }, []);
 
   const addToCfg = useCallback((item) => {
     addToConfiguratorDraft(item);
@@ -267,7 +221,12 @@ export default function Home() {
                 </div>
                 <div className="p-3 flex flex-col flex-1">
                   <p className="text-xs text-brand-orange font-medium mb-1">{p.category_name}</p>
-                  <p className="font-medium text-brand-ink text-sm leading-snug line-clamp-2 mb-2">{p.name}</p>
+                  <Link
+                    to={`/product/${p.slug}`}
+                    className="font-medium text-brand-ink text-sm leading-snug line-clamp-2 mb-2 hover:text-brand-orange"
+                  >
+                    {p.name}
+                  </Link>
                   <p className="text-lg font-semibold text-brand-ink mt-auto">{money(p.price)}</p>
                   <p className={`text-xs mt-1 ${p.stock > 0 ? "text-brand-green" : "text-red-600"}`}>
                     {p.stock > 0 ? `На складі: ${p.stock} шт.` : "Немає в наявності"}
